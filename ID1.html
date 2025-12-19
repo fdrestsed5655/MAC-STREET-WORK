@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAC STREET WORK</title>
+    <style>
+        /* --- Reset & Global Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #050505; /* สีดำเกือบสนิทแบบในภาพ */
+            color: #ffffff;
+            line-height: 1.5;
+            overflow-x: hidden; /* ป้องกันการเลื่อนแนวนอน */
+        }
+
+        a {
+            text-decoration: none;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #fff;
+        }
+
+        /* --- Navigation Bar (คงไว้เหมือนเดิม) --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 200px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 20px;
+            height: 30px;
+            background: linear-gradient(to bottom right, #fff 50%, #050505 50%);
+            border: 2px solid white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .btn-signup {
+            background-color: #fff;
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .btn-signup:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* --- Hero Section (คงไว้เหมือนเดิม) --- */
+        .hero {
+            text-align: center;
+            padding: 100px 20px 60px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 80px;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(to bottom, #ffffff, #888888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #888;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn-primary {
+            background-color: #fff;
+            color: #000;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .btn-secondary {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            border: 1px solid #333;
+        }
+
+        /* --- Portfolio Grid (Masonry Style with Scroll Effect) --- */
+        .portfolio-section {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            /* เพิ่ม perspective เพื่อให้เอฟเฟกต์ 3D ชัดขึ้น */
+            perspective: 1000px; 
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            /* จัดการการไหลของ masonry แบบคร่าวๆ */
+            grid-auto-flow: dense;
+        }
+
+        .card {
+            background-color: #111;
+            border-radius: 15px; /* มุมโค้งมากขึ้นตามภาพ */
+            overflow: hidden;
+            position: relative;
+            /* ใช้ will-change เพื่อบอก browser ว่าจะมีการเปลี่ยนแปลง transform */
+            will-change: transform;
+            /* ตั้งค่าเริ่มต้นสำหรับการเคลื่อนที่ */
+            transform: translateY(0) translateZ(0);
+            transition: transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* ทำให้การเคลื่อนที่นุ่มนวล */
+        }
+
+        /* --- สไตล์เฉพาะของการ์ดแต่ละใบให้เหมือนในภาพ --- */
+
+        /* Card 1: Compliance (สีครีม) */
+        .card.compliance {
+            background-color: #f9f5e3;
+            color: #000;
+            grid-row: span 2; /* สูงเป็นพิเศษ */
+            
+        }
+        .card.compliance .card-content {
+            padding: 40px;
+        }
+        .card.compliance h3 { font-size: 32px; margin-bottom: 20px; }
+        .card.compliance p { color: #555; font-size: 16px; }
+
+        /* Card 2: Haptic (สีส้ม) */
+        .card.haptic {
+            background-color: #ff4d00;
+            color: #000;
+            grid-column: span 2; /* กว้างเป็นพิเศษ */
+            aspect-ratio: 2;
+        }
+        .card.haptic .card-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        .card.haptic h3 { font-size: 36px; font-weight: 800; max-width: 60%; }
+
+        /* Card 3: AI Answer Engine (สีเขียวเข้ม) */
+        .card.ai-engine {
+            background-color: #1a2e1a; /* สีเขียวเข้ม */
+            color: #fff;
+            aspect-ratio: 1/1;
+            /* ลวดลายกราฟิก (จำลอง) */
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 10px);
+        }
+        .card.ai-engine .card-content {
+            padding: 30px;
+        }
+        .card.ai-engine h3 { font-size: 28px; margin-bottom: 20px; }
+
+        /* Card 4: TOWN (สีเขียว/ภาพคน) */
+        .card.town {
+            background-color: #004d40; /* สีเขียว */
+            color: #fff;
+            grid-row: span 2;
+        }
+        .card.town .card-image-container {
+            height: 50%;
+            background-color: #ddd; /* Placeholder สำหรับรูปคน */
+            /* ใส่รูปจริงตรงนี้: background-image: url('path/to/man-on-phone.jpg'); background-size: cover; */
+        }
+        .card.town .card-content {
+            padding: 30px;
+            height: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .card.town h3 { font-size: 32px; margin-bottom: 20px; line-height: 1.2; }
+        .card.town p { color: #ccc; font-size: 16px; }
+
+        /* Card 5: Novel Reading (สีน้ำเงิน) */
+        .card.novel {
+            background-color: #0056ff; /* สีน้ำเงินสด */
+            color: #fff;
+            grid-row: span 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+        }
+        .card.novel h1 {
+            font-size: 50px;
+            line-height: 1;
+            font-weight: 900;
+            color: #80bfff; /* สีฟ้าอ่อน */
+        }
+        .card.novel p {
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 48px; }
+            .nav-links { display: none; }
+            /* บนมือถือให้เรียงเป็นคอลัมน์เดียว และยกเลิกการ span */
+            .grid { grid-template-columns: 1fr; }
+            .card.compliance, .card.haptic, .card.town, .card.novel { grid-row: span 1; grid-column: span 1; aspect-ratio: auto; height: 400px;}
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <img src="/Img/E2BD2D2F-80B1-46B4-B843-41100DF996A7-Photoroom.png" width="100px" height="50px" style="left: 100px;">
+            <div class=></div>
+        </div>
+        <div class="nav-links">
+            <a href="#">Production</a>
+            <a href="#">Landscape</a>
+            <a href="#">Portrait</a>
+            <a href="#">Street Photography</a>
+            <a href="#">Macro</a>
+        </div>
+        <div class="nav-actions">
+            <a href="#">ติดต่อเรา</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>MAC STREET WORK<br>Portfolio</h1>
+        <p>
+            Framer is the site builder trusted by startups to Fortune 500.
+            Build fast and scale with an integrated CMS, SEO, Analytics, and more.
+        </p>
+        <div class="cta-buttons">
+            <a href="#" class="btn-primary">ดูผลงานทั้งหมด</a>
+        </div>
+    </section>
+
+    <section class="portfolio-section">
+        <div class="grid">
+            <div class="card compliance" data-speed="1" style="right: 2.2cm; width: 200px; height: 350px; top: 1px;">
+                <div style="height: 40%; background-color: #e0dbc5; /* Placeholder for top image */"><img src="/Img/IMG_6273.jpg" style="width: 240px; height: 400px;"></div>
+                <div class="card-content">
+                </div>
+            </div>
+
+            <div class="card haptic" data-speed="1.1" style="right: 5.7cm; width:600px; height: 200px; top: 1px;">
+                <img src="/Img/IMG_6043-2.jpg" style="width: 700px; height: 200px;">
+                <div class="card-content">
+                    <div style="height: 50px; background-color: rgba(0,0,0,0.1); margin-top: auto;"><></div>
+                </div>
+            </div>
+            
+
+            <div class="card ai-engine" data-speed="1" style="right: 7.6cm; width: 200px; height: 350px;">
+                <img src="/Img/IMG_5805.JPG" style="width: 220px; height: 400px;">
+                <div class="card-content">
+                    <h3></h3>
+                    <p style="color: #aaa;"></p>
+                </div>
+            </div>
+
+            <div class="card town" data-speed="1.1" style="left: 590.5px; width: 300px; height: 300px; top: -380px;">
+                <img src="/Img/APC_2718.JPG" style="width: 300px; height: 300px;">
+                <div class="card-content">
+                    <h3></h3>
+                    <p></p>
+                </div>
+                <div class="card-image-container"></div>
+            </div>
+
+             <div class="card novel" data-speed="1" style="right: 20.1cm; width: 200px; height: 350px; top: -25px;">
+                <img src="/Img/APC_2560.JPG" style="width: 265px; height: 350px;">
+            </div>
+
+            <div class="card ai-engine" data-speed="1" style="right: -5.8cm; width: 170px; height: 350px; top: -380px;">
+                <img src="/Img/IMG_5605.JPG" style="width: 240px; height: 400px;">
+                <div class="card-content">
+                    <h3></h3>
+                    <p style="color: #aaa;"></p>
+                </div>
+            </div>
+
+            <div class="card haptic" data-speed="1.1" style="right: -3.2cm; width:600px; height: 400px; top: -585px;">
+                <img src="/Img/IMG_6038.jpg" style="width: 600px; height: 400px;">
+                <div class="card-content">
+                    <h3></h3>
+                    <div style="height: 50px; background-color: rgba(0,0,0,0.1); margin-top: auto;"></div>
+                </div>
+            </div>
+
+            <div class="card haptic" data-speed="1.1" style="right: -6.7cm; width:300px; height: 250px; top: -487px;">
+                <img src="/Img/APC_2809.JPG" style="width: 300px; height: 340px;">
+                <div class="card-content">
+                    <h3>We help ambs teams turn bold visions into lasting impact.</h3>
+                    <div style="height: 50px; background-color: rgba(0,0,0,0.1); margin-top: auto;"></div>
+                </div>
+            </div>
+            
+            <div class="card compliance" data-speed="1" style="right: 2.2cm; width: 200px; height: 350px; top: -511px;">
+                <div style="height: 40%; background-color: #e0dbc5; /* Placeholder for top image */"><img src="/Img/IMG_5415.JPG" style="width: 250px; height: 360px;"></div>
+                <div class="card-content">
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+
+            <div class="card compliance" data-speed="1.1" style="right: 217px; width: 200px; height: 350px; top: -612px;">
+                <div style="height: 40%; background-color: #e0dbc5; /* Placeholder for top image */"><img src="/Img/IMG_6188-2.jpg" style="width: 200px; height: 350px;"></div>
+                <div class="card-content">
+                    <h3>The new standard in compliance</h3>
+                    <p>Meet the modern platform that accelerates business onboarding, automates manual work and grows revenue.</p>
+                </div>
+            </div>
+            
+            <div class="card compliance" data-speed="1" style="right: -50px; width: 200px; height: 350px; top: -867px;">
+                <div style="height: 40%; background-color: #fbfbfb; /* Placeholder for top image */"><img src="/Img/IMG_5695.jpg" style="width: 240px; height: 400px;"></div>
+                <div class="card-content">
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+
+            <div class="card compliance" data-speed="1" style="right: -219px; width: 200px; height: 350px; top: -867px;">
+                <div style="height: 40%; background-color: #e0dbc5; /* Placeholder for top image */"><img src="/Img/IMG_5833.JPG" style="width: 240px; height: 400px;"></div>
+                <div class="card-content">
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+
+            <div class="card compliance" data-speed="1.1" style="right: -120px; width: 600px; height: 130px; top: -640px;">
+                <div style="height: 40%; background-color: #e0dbc5; /* Placeholder for top image */"><img src="/Img/IMG_6030-2.jpg" style="width: 600px; height: 200px;"></div>
+                <div class="card-content">
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+            <div class="card compliance" data-speed="1.1" style="right: 13px; width: 397px; height: 350px; top: -992px;">
+                <div style="height: 40%; background-color: #e0dbc5; /* Placeholder for top image */"><img src="/Img/IMG_5700.jpg" style="width: 600px; height: 350px;"></div>
+                <div class="card-content">
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+
+            <div class="card compliance" data-speed="1.1" style="right: -253px; width: 300px; height: 540px; top: -1044px;">
+                <div style="height: 40%; background-color: #e0dbc5; /* Placeholder for top image */"><img src="/Img/IMG_4920.jpg" style="width: 300px; height: 540px;"></div>
+                <div class="card-content">
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+
+            <div class="card compliance" data-speed="1" style="right: 288px; width: 200px; height: 357px; top: -894px;">
+                <div style="height: 40%; background-color: #e0dbc5; /* Placeholder for top image */"><img src="/Img/IMG_5575.JPG" style="width: 200px; height: 357px;"></div>
+                <div class="card-content">
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+
+            <div class="card compliance" data-speed="1" style="right: -1232px; width: 190px; height: 370px; top: -1463px;">
+                <div style="height: 40%; background-color: #e0dbc5; /* Placeholder for top image */"><img src="/Img/IMG_4646.jpg" style="width: 200px; height: 370px;"></div>
+                <div class="card-content">
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+
+            </div>
+    </section>
+
+    <footer style="text-align: center; padding: 40px; color: #444; font-size: 12px; margin-top: 50px;">
+        &copy; 2025 Your Portfolio Name. All rights reserved.
+    </footer>
+
+    <script>
+        // รอให้โหลดหน้าเว็บเสร็จก่อน
+        document.addEventListener("DOMContentLoaded", () => {
+            const cards = document.querySelectorAll('.card');
+
+            // ฟังก์ชันที่จะทำงานเมื่อมีการเลื่อนหน้าจอ
+            function handleScroll() {
+                const scrollY = window.scrollY; // ตำแหน่งการเลื่อนแนวตั้งปัจจุบัน
+
+                cards.forEach(card => {
+                    // ดึงค่าความเร็วจาก data-speed (ถ้าไม่มีให้ใช้ค่าเริ่มต้น 1)
+                    const speed = parseFloat(card.getAttribute('data-speed')) || 1;
+                    
+                    // คำนวณระยะที่จะเลื่อน: ยิ่ง speed มาก ยิ่งเลื่อนเยอะ
+                    // หารด้วยตัวเลขเพื่อปรับความแรงของเอฟเฟกต์ (ลองปรับ 20 ดู)
+                    const yOffset = -(scrollY * (speed - 1)) / 5; 
+
+                    // ใช้ transform เพื่อเลื่อนการ์ด
+                    card.style.transform = `translateY(${yOffset}px) translateZ(0)`;
+                });
+            }
+
+            // เรียกใช้ฟังก์ชัน handleScroll เมื่อเกิด event 'scroll'
+            window.addEventListener('scroll', handleScroll);
+
+            // เรียกครั้งแรกเพื่อให้ตำแหน่งถูกต้องตอนโหลดหน้า
+            handleScroll();
+        });
+    </script>
+
+</body>
+</html>
